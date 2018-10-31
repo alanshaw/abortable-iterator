@@ -67,7 +67,7 @@ Make any iterator or iterable abortable via an `AbortSignal`.
 | Name | Type | Description |
 |------|------|-------------|
 | iterator | [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol)\|[`Iterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | The iterator or iterable object to make abortable |
-| signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | The iterator or iterable object to make abortable |
+| signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | Signal obtained from `AbortController.signal` which is used to abort the iterator. |
 | options | `Object` | (optional) options |
 | options.onAbort | `Function` | An (async) function called when the iterator is being aborted, before the abort error is thrown. |
 | options.abortMessage | `String` | The message that the error will have if the iterator is aborted. |
