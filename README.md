@@ -19,7 +19,7 @@ const abortable = require('abortable-iterator')
 const AbortController = require('abort-controller')
 
 // An example function that creates an async iterator that yields an increasing
-// number every x milliseconds
+// number every x milliseconds and NEVER ENDS!
 const asyncCounter = async function * (start, delay) {
   let i = start
   while (true) {

@@ -14,6 +14,7 @@
     "cancel",
     "stop",
     "AbortController",
+    "AbortSignal",
     "signal"
   ],
   "author": "Alan Shaw",

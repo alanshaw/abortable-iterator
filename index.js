@@ -8,7 +8,7 @@ module.exports = function createAbortable (iterator, signal, options) {
   const abortCode = options.abortCode || 'ERR_ABORTED'
   const errAborted = () => Object.assign(new Error(abortMessage), { code: abortCode })
 
-  return (async function * abortable () {
+  async function * abortable () {
     while (true) {
       let result
       try {
@@ -36,7 +36,9 @@ module.exports = function createAbortable (iterator, signal, options) {
       if (result.done) return
       yield result.value
     }
-  })()
+  }
+
+  return abortable()
 }
 
 // If the passed object is an iterable, then get an iterator
