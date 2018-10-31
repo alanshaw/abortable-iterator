@@ -1,0 +1,35 @@
+{
+  "name": "abortable-iterator",
+  "version": "0.0.0",
+  "description": "Make any iterator or iterable abortable via an AbortSignal",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=lcov --reporter=text ava --verbose"
+  },
+  "keywords": [
+    "async",
+    "iterator",
+    "abort",
+    "abortable",
+    "cancel",
+    "stop",
+    "AbortController",
+    "signal"
+  ],
+  "author": "Alan Shaw",
+  "license": "MIT",
+  "devDependencies": {
+    "abort-controller": "^1.0.2",
+    "ava": "^1.0.0-rc.1",
+    "babel-eslint": "^10.0.1",
+    "nyc": "^13.1.0"
+  },
+  "ava": {
+    "babel": false,
+    "compileEnhancements": false,
+    "failWithoutAssertions": false
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  }
+}
