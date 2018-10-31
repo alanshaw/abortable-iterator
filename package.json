@@ -1,6 +1,6 @@
 {
   "name": "abortable-iterator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Make any iterator or iterable abortable via an AbortSignal",
   "main": "index.js",
   "scripts": {
