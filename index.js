@@ -1,6 +1,8 @@
+const getIterator = require('get-iterator')
+
 // Wrap an iterator to make it abortable, allow cleanup when aborted via onAbort
 module.exports = function createAbortable (iterator, signal, options) {
-  iterator = toIterator(iterator)
+  iterator = getIterator(iterator)
   options = options || {}
 
   const onAbort = options.onAbort || (() => {})
@@ -39,18 +41,4 @@ module.exports = function createAbortable (iterator, signal, options) {
   }
 
   return abortable()
-}
-
-// If the passed object is an iterable, then get an iterator
-function toIterator (obj) {
-  if (typeof obj[Symbol.iterator] === 'function') {
-    return obj[Symbol.iterator]()
-  }
-  if (typeof obj[Symbol.asyncIterator] === 'function') {
-    return obj[Symbol.asyncIterator]()
-  }
-  if (typeof obj.next === 'function') {
-    return obj // probably an iterator
-  }
-  throw new Error('argument is not an iterator or iterable')
 }

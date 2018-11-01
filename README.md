@@ -1,6 +1,6 @@
 # abortable-iterator
 
-[![Build Status](https://travis-ci.org/alanshaw/abortable-iterator.svg?branch=master)](https://travis-ci.org/alanshaw/abortable-iterator) [![dependencies Status](https://david-dm.org/alanshaw/abortable-iterator/status.svg)](https://david-dm.org/alanshaw/abortable-iterator)
+[![Build Status](https://travis-ci.org/alanshaw/abortable-iterator.svg?branch=master)](https://travis-ci.org/alanshaw/abortable-iterator) [![dependencies Status](https://david-dm.org/alanshaw/abortable-iterator/status.svg)](https://david-dm.org/alanshaw/abortable-iterator) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 > Make any iterator or iterable abortable via an AbortSignal
 
