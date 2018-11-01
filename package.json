@@ -32,5 +32,14 @@
   },
   "standard": {
     "parser": "babel-eslint"
-  }
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanshaw/abortable-iterator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alanshaw/abortable-iterator/issues"
+  },
+  "homepage": "https://github.com/alanshaw/abortable-iterator#readme"
 }
