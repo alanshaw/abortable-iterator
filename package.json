@@ -20,10 +20,10 @@
   "author": "Alan Shaw",
   "license": "MIT",
   "devDependencies": {
-    "abort-controller": "^1.0.2",
-    "ava": "^1.0.0-rc.1",
+    "abort-controller": "^3.0.0",
+    "ava": "^1.4.1",
     "babel-eslint": "^10.0.1",
-    "nyc": "^13.1.0",
+    "nyc": "^14.0.0",
     "standard": "^12.0.1"
   },
   "ava": {
@@ -35,7 +35,7 @@
     "parser": "babel-eslint"
   },
   "dependencies": {
-    "get-iterator": "^1.0.0"
+    "get-iterator": "^1.0.2"
   },
   "repository": {
     "type": "git",

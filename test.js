@@ -22,21 +22,27 @@ test('should abort', async t => {
     }
   })
 
+  t.is(err.type, 'aborted')
   t.is(err.code, 'ERR_ABORTED')
 })
 
 test('should abort with onAbort handler', async t => {
   const controller = new AbortController()
-  let timeoutId
+
   const iterator = (async function * () {
-    yield new Promise((resolve, reject) => {
-      timeoutId = setTimeout(() => resolve(Math.random()), 1000)
-    })
+    while (true) {
+      yield new Promise(resolve => setTimeout(() => resolve(Math.random()), 1000))
+    }
   })()
-  const onAbort = () => {
-    clearTimeout(timeoutId)
-    timeoutId = null
-  }
+
+  // Ensure we allow async cleanup
+  let onAbortCalled = false
+  const onAbort = () => new Promise(resolve => {
+    setTimeout(() => {
+      onAbortCalled = true
+      resolve()
+    }, 1000)
+  })
 
   // Abort after 10ms
   setTimeout(() => controller.abort(), 10)
@@ -47,8 +53,9 @@ test('should abort with onAbort handler', async t => {
     }
   })
 
+  t.is(err.type, 'aborted')
   t.is(err.code, 'ERR_ABORTED')
-  t.is(timeoutId, null)
+  t.true(onAbortCalled)
 })
 
 test('should complete successfully', async t => {
@@ -87,5 +94,6 @@ test('should abort if already aborted', async t => {
     }
   })
 
+  t.is(err.type, 'aborted')
   t.is(err.code, 'ERR_ABORTED')
 })
