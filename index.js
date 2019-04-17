@@ -47,3 +47,5 @@ module.exports = function createAbortable (iterator, signal, options) {
 
   return abortable()
 }
+
+module.exports.AbortError = AbortError
