@@ -5,7 +5,9 @@ function AbortError (message) {
   this.message = message
 
   // hide custom error implementation details from end-users
-  Error.captureStackTrace(this, this.constructor)
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, this.constructor)
+  }
 }
 
 AbortError.prototype = Object.create(Error.prototype)
