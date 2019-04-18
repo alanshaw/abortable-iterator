@@ -23,7 +23,7 @@ test('should abort', async t => {
   })
 
   t.is(err.type, 'aborted')
-  t.is(err.code, 'ERR_ABORTED')
+  t.is(err.code, 'ABORT_ERR')
 })
 
 test('should abort with onAbort handler', async t => {
@@ -54,7 +54,7 @@ test('should abort with onAbort handler', async t => {
   })
 
   t.is(err.type, 'aborted')
-  t.is(err.code, 'ERR_ABORTED')
+  t.is(err.code, 'ABORT_ERR')
   t.true(onAbortCalled)
 })
 
@@ -95,5 +95,5 @@ test('should abort if already aborted', async t => {
   })
 
   t.is(err.type, 'aborted')
-  t.is(err.code, 'ERR_ABORTED')
+  t.is(err.code, 'ABORT_ERR')
 })

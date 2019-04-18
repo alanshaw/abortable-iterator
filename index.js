@@ -4,21 +4,16 @@ const AbortError = require('./AbortError')
 // Wrap an iterator to make it abortable, allow cleanup when aborted via onAbort
 module.exports = function createAbortable (iterator, signal, options) {
   iterator = getIterator(iterator)
-  options = options || {}
-
-  const { onAbort } = options
-  const abortMessage = options.abortMessage || 'Operation aborted'
-  const abortCode = options.abortCode || 'ERR_ABORTED'
-  const errAborted = () => Object.assign(new AbortError(abortMessage), { code: abortCode })
+  const { onAbort, abortMessage, abortCode } = options || {}
 
   async function * abortable () {
     while (true) {
       let result, abortHandler
       try {
-        if (signal.aborted) throw errAborted()
+        if (signal.aborted) throw new AbortError(abortMessage, abortCode)
 
         const abort = new Promise((resolve, reject) => {
-          abortHandler = () => reject(errAborted())
+          abortHandler = () => reject(new AbortError(abortMessage, abortCode))
           signal.addEventListener('abort', abortHandler)
         })
 
