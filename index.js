@@ -2,45 +2,77 @@ const getIterator = require('get-iterator')
 const AbortError = require('./AbortError')
 
 // Wrap an iterator to make it abortable, allow cleanup when aborted via onAbort
-module.exports = function createAbortable (iterator, signal, options) {
+module.exports = (iterator, signal, options) => {
+  return createMultiAbortable(iterator, [{ signal, options }])
+}
+
+function createMultiAbortable (iterator, signals) {
   iterator = getIterator(iterator)
-  const { onAbort, abortMessage, abortCode } = options || {}
 
   async function * abortable () {
+    let nextAbortHandler
+    const abortHandler = () => {
+      if (nextAbortHandler) nextAbortHandler()
+    }
+
+    for (const { signal } of signals) {
+      signal.addEventListener('abort', abortHandler)
+    }
+
     while (true) {
-      let result, abortHandler
+      let result
       try {
-        if (signal.aborted) throw new AbortError(abortMessage, abortCode)
-
-        const abort = new Promise((resolve, reject) => {
-          abortHandler = () => reject(new AbortError(abortMessage, abortCode))
-          signal.addEventListener('abort', abortHandler)
-        })
-
-        // Race the iterator and the abort signal
-        result = await Promise.race([abort, iterator.next()])
-      } catch (err) {
-        if (err.type === 'aborted') {
-          // Do any custom abort handling for the iterator
-          if (onAbort) {
-            await onAbort(iterator)
-          }
-
-          // End the iterator if it is a generator
-          if (typeof iterator.return === 'function') {
-            await iterator.return()
+        for (const { signal, options } of signals) {
+          if (signal.aborted) {
+            const { abortMessage, abortCode } = options || {}
+            throw new AbortError(abortMessage, abortCode)
           }
         }
+
+        const abort = new Promise((resolve, reject) => {
+          nextAbortHandler = () => {
+            const { options } = signals.find(({ signal }) => signal.aborted)
+            const { abortMessage, abortCode } = options || {}
+            reject(new AbortError(abortMessage, abortCode))
+          }
+        })
+
+        // Race the iterator and the abort signals
+        result = await Promise.race([abort, iterator.next()])
+        nextAbortHandler = null
+      } catch (err) {
+        for (const { signal } of signals) {
+          signal.removeEventListener('abort', abortHandler)
+        }
+
+        if (err.type === 'aborted') {
+          // Do any custom abort handling for the iterator
+          const index = signals.findIndex(({ signal }) => signal.aborted)
+          if (index > -1 && signals[index].options && signals[index].options.onAbort) {
+            await signals[index].options.onAbort(iterator)
+          }
+        }
+
+        // End the iterator if it is a generator
+        if (typeof iterator.return === 'function') {
+          await iterator.return()
+        }
+
         throw err
-      } finally {
-        if (abortHandler) signal.removeEventListener('abort', abortHandler)
       }
-      if (result.done) return
+
+      if (result.done) break
       yield result.value
+    }
+
+    for (const { signal } of signals) {
+      signal.removeEventListener('abort', abortHandler)
     }
   }
 
   return abortable()
 }
+
+module.exports.multi = createMultiAbortable
 
 module.exports.AbortError = AbortError

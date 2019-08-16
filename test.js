@@ -26,6 +26,35 @@ test('should abort', async t => {
   t.is(err.code, 'ABORT_ERR')
 })
 
+test('should multi abort', async t => {
+  const controller0 = new AbortController()
+  const controller1 = new AbortController()
+
+  const iterator = (async function * () {
+    // Never ends!
+    while (true) {
+      yield new Promise((resolve, reject) => {
+        setTimeout(() => resolve(Math.random()))
+      })
+    }
+  })()
+
+  // Abort after 10ms
+  setTimeout(() => controller1.abort(), 10)
+
+  const err = await t.throwsAsync(async () => {
+    for await (const value of abortable.multi(iterator, [
+      { signal: controller0.signal },
+      { signal: controller1.signal }
+    ])) {
+      t.log(value)
+    }
+  })
+
+  t.is(err.type, 'aborted')
+  t.is(err.code, 'ABORT_ERR')
+})
+
 test('should abort with onAbort handler', async t => {
   const controller = new AbortController()
 

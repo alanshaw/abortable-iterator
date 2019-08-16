@@ -61,7 +61,6 @@ const abortable = require('abortable-iterator')
 
 Make any iterator or iterable abortable via an `AbortSignal`.
 
-
 #### Parameters
 
 | Name | Type | Description |
@@ -80,6 +79,25 @@ Make any iterator or iterable abortable via an `AbortSignal`.
 | [`Iterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | An iterator that wraps the passed `iterator` parameter that makes it abortable via the passed `signal` parameter. |
 
 The returned iterator will `throw` an `AbortError` when it is aborted that has a `type` with the value `aborted` and `code` property with the value `ABORT_ERR` by default.
+
+### `abortable.multi(iterator, signals)`
+
+Make any iterator or iterable abortable via any one of the passed `AbortSignal`'s.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| iterator | [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol)\|[`Iterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | The iterator or iterable object to make abortable |
+| signals | `Array<{ signal, [options] }>` | An array of objects with `signal` and optional `options` properties. See above docs for expected values for these two properties. |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| [`Iterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | An iterator that wraps the passed `iterator` parameter that makes it abortable via the passed `signal` parameters. |
+
+The returned iterator will `throw` an `AbortError` when it is aborted on _any_ one of the passed abort signals. The error object has a `type` with the value `aborted` and `code` property with the value `ABORT_ERR` by default.
 
 ## Contribute
 
