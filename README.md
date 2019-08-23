@@ -99,6 +99,10 @@ Make any iterator or iterable abortable via any one of the passed `AbortSignal`'
 
 The returned iterator will `throw` an `AbortError` when it is aborted on _any_ one of the passed abort signals. The error object has a `type` with the value `aborted` and `code` property with the value `ABORT_ERR` by default.
 
+## Related
+
+* [`it-pipe`](https://www.npmjs.com/package/it-pipe) Utility to "pipe" async iterables together
+
 ## Contribute
 
 Feel free to dive in! [Open an issue](https://github.com/alanshaw/abortable-iterator/issues/new) or submit PRs.
