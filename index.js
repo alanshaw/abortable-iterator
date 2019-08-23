@@ -2,12 +2,12 @@ const getIterator = require('get-iterator')
 const AbortError = require('./AbortError')
 
 // Wrap an iterator to make it abortable, allow cleanup when aborted via onAbort
-module.exports = (iterator, signal, options) => {
-  return createMultiAbortable(iterator, [{ signal, options }])
-}
+const toAbortableSource = (source, signal, options) => (
+  toMultiAbortableSource(source, [{ signal, options }])
+)
 
-function createMultiAbortable (iterator, signals) {
-  iterator = getIterator(iterator)
+const toMultiAbortableSource = (source, signals) => {
+  source = getIterator(source)
 
   async function * abortable () {
     let nextAbortHandler
@@ -38,7 +38,7 @@ function createMultiAbortable (iterator, signals) {
         })
 
         // Race the iterator and the abort signals
-        result = await Promise.race([abort, iterator.next()])
+        result = await Promise.race([abort, source.next()])
         nextAbortHandler = null
       } catch (err) {
         for (const { signal } of signals) {
@@ -49,13 +49,13 @@ function createMultiAbortable (iterator, signals) {
           // Do any custom abort handling for the iterator
           const index = signals.findIndex(({ signal }) => signal.aborted)
           if (index > -1 && signals[index].options && signals[index].options.onAbort) {
-            await signals[index].options.onAbort(iterator)
+            await signals[index].options.onAbort(source)
           }
         }
 
         // End the iterator if it is a generator
-        if (typeof iterator.return === 'function') {
-          await iterator.return()
+        if (typeof source.return === 'function') {
+          await source.return()
         }
 
         throw err
@@ -73,6 +73,34 @@ function createMultiAbortable (iterator, signals) {
   return abortable()
 }
 
-module.exports.multi = createMultiAbortable
+const toAbortableSink = (sink, signal, options) => (
+  toMultiAbortableSink(sink, [{ signal, options }])
+)
 
+const toMultiAbortableSink = (sink, signals) => source => (
+  sink(toMultiAbortableSource(source, signals))
+)
+
+const toAbortableDuplex = (sink, signal, options) => (
+  toMultiAbortableDuplex(sink, [{ signal, options }])
+)
+
+const toMultiAbortableDuplex = (duplex, signals) => ({
+  sink: toMultiAbortableSink(duplex.sink),
+  source: toMultiAbortableSource(duplex.source)
+})
+
+module.exports = toAbortableSource
 module.exports.AbortError = AbortError
+
+module.exports.source = toAbortableSource
+module.exports.source.multi = toMultiAbortableSource
+
+module.exports.sink = toAbortableSink
+module.exports.sink.multi = toMultiAbortableSink
+
+module.exports.transform = toAbortableSink
+module.exports.transform.multi = toMultiAbortableSink
+
+module.exports.duplex = toAbortableDuplex
+module.exports.duplex.multi = toMultiAbortableDuplex
