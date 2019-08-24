@@ -8,6 +8,7 @@ const toAbortableSource = (source, signal, options) => (
 
 const toMultiAbortableSource = (source, signals) => {
   source = getIterator(source)
+  signals = signals.map(({ signal, options }) => ({ signal, options: options || {} }))
 
   async function * abortable () {
     let nextAbortHandler
@@ -24,7 +25,7 @@ const toMultiAbortableSource = (source, signals) => {
       try {
         for (const { signal, options } of signals) {
           if (signal.aborted) {
-            const { abortMessage, abortCode } = options || {}
+            const { abortMessage, abortCode } = options
             throw new AbortError(abortMessage, abortCode)
           }
         }
@@ -32,7 +33,7 @@ const toMultiAbortableSource = (source, signals) => {
         const abort = new Promise((resolve, reject) => {
           nextAbortHandler = () => {
             const { options } = signals.find(({ signal }) => signal.aborted)
-            const { abortMessage, abortCode } = options || {}
+            const { abortMessage, abortCode } = options
             reject(new AbortError(abortMessage, abortCode))
           }
         })
@@ -45,17 +46,22 @@ const toMultiAbortableSource = (source, signals) => {
           signal.removeEventListener('abort', abortHandler)
         }
 
-        if (err.type === 'aborted') {
+        // Might not have been aborted by a known signal
+        const aborter = signals.find(({ signal }) => signal.aborted)
+        const isKnownAborter = err.type === 'aborted' && aborter
+
+        if (isKnownAborter && aborter.options.onAbort) {
           // Do any custom abort handling for the iterator
-          const index = signals.findIndex(({ signal }) => signal.aborted)
-          if (index > -1 && signals[index].options && signals[index].options.onAbort) {
-            await signals[index].options.onAbort(source)
-          }
+          await aborter.options.onAbort(source)
         }
 
         // End the iterator if it is a generator
         if (typeof source.return === 'function') {
           await source.return()
+        }
+
+        if (isKnownAborter && aborter.options.returnOnAbort) {
+          return
         }
 
         throw err
