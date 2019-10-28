@@ -3,7 +3,7 @@ const AbortError = require('./AbortError')
 
 // Wrap an iterator to make it abortable, allow cleanup when aborted via onAbort
 const toAbortableSource = (source, signal, options) => (
-  toMultiAbortableSource(source, [{ signal, options }])
+  toMultiAbortableSource(source, Array.isArray(signal) ? signal : [{ signal, options }])
 )
 
 const toMultiAbortableSource = (source, signals) => {
@@ -80,33 +80,25 @@ const toMultiAbortableSource = (source, signals) => {
 }
 
 const toAbortableSink = (sink, signal, options) => (
-  toMultiAbortableSink(sink, [{ signal, options }])
+  toMultiAbortableSink(sink, Array.isArray(signal) ? signal : [{ signal, options }])
 )
 
 const toMultiAbortableSink = (sink, signals) => source => (
   sink(toMultiAbortableSource(source, signals))
 )
 
-const toAbortableDuplex = (sink, signal, options) => (
-  toMultiAbortableDuplex(sink, [{ signal, options }])
+const toAbortableDuplex = (duplex, signal, options) => (
+  toMultiAbortableDuplex(duplex, Array.isArray(signal) ? signal : [{ signal, options }])
 )
 
 const toMultiAbortableDuplex = (duplex, signals) => ({
-  sink: toMultiAbortableSink(duplex.sink),
-  source: toMultiAbortableSource(duplex.source)
+  sink: toMultiAbortableSink(duplex.sink, signals),
+  source: toMultiAbortableSource(duplex.source, signals)
 })
 
 module.exports = toAbortableSource
 module.exports.AbortError = AbortError
-
 module.exports.source = toAbortableSource
-module.exports.source.multi = toMultiAbortableSource
-
 module.exports.sink = toAbortableSink
-module.exports.sink.multi = toMultiAbortableSink
-
 module.exports.transform = toAbortableSink
-module.exports.transform.multi = toMultiAbortableSink
-
 module.exports.duplex = toAbortableDuplex
-module.exports.duplex.multi = toMultiAbortableDuplex

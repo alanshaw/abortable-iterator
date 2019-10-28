@@ -4,7 +4,8 @@
   "description": "Make any iterator or iterable abortable via an AbortSignal",
   "main": "index.js",
   "scripts": {
-    "test": "standard && nyc --reporter=lcov --reporter=text ava --verbose"
+    "test": "npm run lint && nyc --reporter=lcov --reporter=text ava --verbose",
+    "lint": "standard"
   },
   "keywords": [
     "async",
@@ -21,18 +22,14 @@
   "license": "MIT",
   "devDependencies": {
     "abort-controller": "^3.0.0",
-    "ava": "^1.4.1",
-    "babel-eslint": "^10.0.1",
-    "nyc": "^14.0.0",
-    "standard": "^12.0.1"
+    "ava": "^2.4.0",
+    "nyc": "^14.1.1",
+    "standard": "^14.3.1"
   },
   "ava": {
     "babel": false,
     "compileEnhancements": false,
     "failWithoutAssertions": false
-  },
-  "standard": {
-    "parser": "babel-eslint"
   },
   "dependencies": {
     "get-iterator": "^1.0.2"
