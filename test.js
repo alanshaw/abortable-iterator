@@ -43,7 +43,7 @@ test('should multi abort', async t => {
   setTimeout(() => controller1.abort(), 10)
 
   const err = await t.throwsAsync(async () => {
-    for await (const value of abortable.multi(iterator, [
+    for await (const value of abortable(iterator, [
       { signal: controller0.signal },
       { signal: controller1.signal }
     ])) {
