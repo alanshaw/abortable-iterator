@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run lint && nyc --reporter=lcov --reporter=text ava --verbose",
-    "lint": "standard"
+    "lint": "standard",
+    "build:docs": "typedoc ."
   },
   "keywords": [
     "async",
@@ -32,7 +33,8 @@
     "failWithoutAssertions": false
   },
   "dependencies": {
-    "get-iterator": "^1.0.2"
+    "get-iterator": "^1.0.2",
+    "typedoc": "^0.15.0"
   },
   "repository": {
     "type": "git",

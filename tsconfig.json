@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
     "target": "es2018"
+  },
+  "typedocOptions": {
+    "name": "abortable-iterator",
+    "mode": "file",
+    "out": "docs",
+    "includeDeclarations": true,
+    "exclude": "node_modules/**/*",
+    "excludeExternals": true
   }
 }
