@@ -1,0 +1,398 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>abortable</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">abortable</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> abortable</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#abortable-iterator" id="abortable-iterator" style="color: inherit; text-decoration: none;">
+					<h1>abortable-iterator</h1>
+				</a>
+				<p><a href="https://travis-ci.org/alanshaw/abortable-iterator"><img src="https://travis-ci.org/alanshaw/abortable-iterator.svg?branch=master" alt="Build Status"></a> <a href="https://david-dm.org/alanshaw/abortable-iterator"><img src="https://david-dm.org/alanshaw/abortable-iterator/status.svg" alt="dependencies Status"></a> <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="JavaScript Style Guide"></a></p>
+				<blockquote>
+					<p>Make any iterator or iterable abortable via an AbortSignal</p>
+				</blockquote>
+				<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortController"><code>AbortController</code></a> is used in the fetch API to abort in flight requests from, for example, a timeout or user action. The same concept is used here to halt iteration of an async iterator.</p>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<pre><code class="language-sh">npm install abortable-iterator</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> abortable = <span class="hljs-built_in">require</span>(<span class="hljs-string">'abortable-iterator'</span>)
+<span class="hljs-keyword">const</span> AbortController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'abort-controller'</span>)
+
+<span class="hljs-comment">// An example function that creates an async iterator that yields an increasing</span>
+<span class="hljs-comment">// number every x milliseconds and NEVER ENDS!</span>
+<span class="hljs-keyword">const</span> asyncCounter = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> * (<span class="hljs-params">start, delay</span>) </span>{
+  <span class="hljs-keyword">let</span> i = start
+  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-keyword">yield</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(i++), delay))
+  }
+}
+
+<span class="hljs-comment">// Create a counter that'll yield numbers from 0 upwards every second</span>
+<span class="hljs-keyword">const</span> everySecond = asyncCounter(<span class="hljs-number">0</span>, <span class="hljs-number">1000</span>)
+
+<span class="hljs-comment">// Make everySecond abortable!</span>
+<span class="hljs-keyword">const</span> controller = <span class="hljs-keyword">new</span> AbortController()
+<span class="hljs-keyword">const</span> abortableEverySecond = abortable(everySecond, controller.signal)
+
+<span class="hljs-comment">// Abort after 5 seconds</span>
+setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> controller.abort(), <span class="hljs-number">5000</span>)
+
+<span class="hljs-keyword">try</span> {
+  <span class="hljs-comment">// Start the iteration, which will throw after 5 seconds when it is aborted</span>
+  <span class="hljs-keyword">for</span> <span class="hljs-keyword">await</span> (<span class="hljs-keyword">const</span> n <span class="hljs-keyword">of</span> abortableEverySecond) {
+    <span class="hljs-built_in">console</span>.log(n)
+  }
+} <span class="hljs-keyword">catch</span> (err) {
+  <span class="hljs-keyword">if</span> (err.code === <span class="hljs-string">'ERR_ABORTED'</span>) {
+    <span class="hljs-comment">// Expected - all ok :D</span>
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">throw</span> err
+  }
+}</code></pre>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> abortable = <span class="hljs-built_in">require</span>(<span class="hljs-string">'abortable-iterator'</span>)</code></pre>
+				<ul>
+					<li><a href="#abortablesource-signal-options"><code>abortable(source, signal, [options])</code></a></li>
+					<li><a href="#abortablesource-signals"><code>abortable(source, signals)</code></a></li>
+					<li><a href="#abortablesource-signal-options"><code>abortable.source(source, signal, [options])</code></a></li>
+					<li><a href="#abortablesource-signals"><code>abortable.source(source, signals)</code></a></li>
+					<li><a href="#abortablesinksink-signal-options"><code>abortable.sink(sink, signal, [options])</code></a></li>
+					<li><a href="#abortablesinksink-signals"><code>abortable.sink(sink, signals)</code></a></li>
+					<li><a href="#abortabletransformtransform-signal-options"><code>abortable.transform(transform, signal, [options])</code></a></li>
+					<li><a href="#abortabletransformtransform-signals"><code>abortable.transform(transform, signals)</code></a></li>
+					<li><a href="#abortableduplexduplex-signal-options"><code>abortable.duplex(duplex, signal, [options])</code></a></li>
+					<li><a href="#abortableduplex-signals"><code>abortable.duplex(duplex, signals)</code></a></li>
+				</ul>
+				<a href="#codeabortablesource-signal-optionscode" id="codeabortablesource-signal-optionscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable(source, signal, [options])</code></h3>
+				</a>
+				<p><strong>(alias for <code>abortable.source(source, signal, [options])</code>)</strong></p>
+				<p>Make any iterator or iterable abortable via an <code>AbortSignal</code>.</p>
+				<a href="#parameters" id="parameters" style="color: inherit; text-decoration: none;">
+					<h4>Parameters</h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>source</td>
+							<td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol"><code>Iterable</code></a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol"><code>Iterator</code></a></td>
+							<td>The iterator or iterable object to make abortable</td>
+						</tr>
+						<tr>
+							<td>signal</td>
+							<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal"><code>AbortSignal</code></a></td>
+							<td>Signal obtained from <code>AbortController.signal</code> which is used to abort the iterator.</td>
+						</tr>
+						<tr>
+							<td>options</td>
+							<td><code>Object</code></td>
+							<td>(optional) options</td>
+						</tr>
+						<tr>
+							<td>options.onAbort</td>
+							<td><code>Function</code></td>
+							<td>An (async) function called when the iterator is being aborted, before the abort error is thrown. Default <code>null</code></td>
+						</tr>
+						<tr>
+							<td>options.abortMessage</td>
+							<td><code>String</code></td>
+							<td>The message that the error will have if the iterator is aborted. Default &quot;The operation was aborted&quot;</td>
+						</tr>
+						<tr>
+							<td>options.abortCode</td>
+							<td><code>String</code>|<code>Number</code></td>
+							<td>The value assigned to the <code>code</code> property of the error that is thrown if the iterator is aborted. Default &quot;ABORT_ERR&quot;</td>
+						</tr>
+						<tr>
+							<td>options.returnOnAbort</td>
+							<td><code>Boolean</code></td>
+							<td>Instead of throwing the abort error, just return from iterating over the source stream.</td>
+						</tr>
+				</tbody></table>
+				<a href="#returns" id="returns" style="color: inherit; text-decoration: none;">
+					<h4>Returns</h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol"><code>Iterable</code></a></td>
+							<td>An iterator that wraps the passed <code>source</code> parameter that makes it abortable via the passed <code>signal</code> parameter.</td>
+						</tr>
+				</tbody></table>
+				<p>The returned iterator will <code>throw</code> an <code>AbortError</code> when it is aborted that has a <code>type</code> with the value <code>aborted</code> and <code>code</code> property with the value <code>ABORT_ERR</code> by default.</p>
+				<a href="#codeabortablesource-signalscode" id="codeabortablesource-signalscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable(source, signals)</code></h3>
+				</a>
+				<p><strong>(alias for <code>abortable.source(source, signals)</code>)</strong></p>
+				<p>Make any iterator or iterable abortable via any one of the passed <code>AbortSignal</code>&#39;s.</p>
+				<a href="#parameters-1" id="parameters-1" style="color: inherit; text-decoration: none;">
+					<h4>Parameters</h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>source</td>
+							<td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol"><code>Iterable</code></a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol"><code>Iterator</code></a></td>
+							<td>The iterator or iterable object to make abortable</td>
+						</tr>
+						<tr>
+							<td>signals</td>
+							<td><code>Array&lt;{ signal, [options] }&gt;</code></td>
+							<td>An array of objects with <code>signal</code> and optional <code>options</code> properties. See above docs for expected values for these two properties.</td>
+						</tr>
+				</tbody></table>
+				<a href="#returns-1" id="returns-1" style="color: inherit; text-decoration: none;">
+					<h4>Returns</h4>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol"><code>Iterator</code></a></td>
+							<td>An iterator that wraps the passed <code>source</code> parameter that makes it abortable via the passed <code>signal</code> parameters.</td>
+						</tr>
+				</tbody></table>
+				<p>The returned iterator will <code>throw</code> an <code>AbortError</code> when it is aborted on <em>any</em> one of the passed abort signals. The error object has a <code>type</code> with the value <code>aborted</code> and <code>code</code> property with the value <code>ABORT_ERR</code> by default.</p>
+				<a href="#codeabortablesinksink-signal-optionscode" id="codeabortablesinksink-signal-optionscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable.sink(sink, signal, [options])</code></h3>
+				</a>
+				<p>The same as <a href="#abortablesource-signal-options"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#sink-it"><code>sink</code></a> abortable. Returns a new sink that wraps the passed <code>sink</code> and makes it abortable via the passed <code>signal</code> parameter.</p>
+				<a href="#codeabortablesinksink-signalscode" id="codeabortablesinksink-signalscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable.sink(sink, signals)</code></h3>
+				</a>
+				<p>The same as <a href="#abortablesource-signals"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#sink-it"><code>sink</code></a> abortable via any one of the passed <code>AbortSignal</code>&#39;s. Returns a new sink that wraps the passed <code>sink</code> and makes it abortable via the passed <code>signal</code> parameters.</p>
+				<a href="#codeabortabletransformtransform-signal-optionscode" id="codeabortabletransformtransform-signal-optionscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable.transform(transform, signal, [options])</code></h3>
+				</a>
+				<p>The same as <a href="#abortablesource-signal-options"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#transform-it"><code>transform</code></a> abortable. Returns a new transform that wraps the passed <code>transform</code> and makes it abortable via the passed <code>signal</code> parameter.</p>
+				<a href="#codeabortabletransformtransform-signalscode" id="codeabortabletransformtransform-signalscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable.transform(transform, signals)</code></h3>
+				</a>
+				<p>The same as <a href="#abortablesource-signals"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#transform-it"><code>transform</code></a> abortable via any one of the passed <code>AbortSignal</code>&#39;s. Returns a new transform that wraps the passed <code>transform</code> and makes it abortable via the passed <code>signal</code> parameters.</p>
+				<a href="#codeabortableduplexduplex-signal-optionscode" id="codeabortableduplexduplex-signal-optionscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable.duplex(duplex, signal, [options])</code></h3>
+				</a>
+				<p>The same as <a href="#abortablesource-signal-options"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it"><code>duplex</code></a> abortable. Returns a new duplex that wraps the passed <code>duplex</code> and makes it abortable via the passed <code>signal</code> parameter.</p>
+				<p>Note that this will abort <em>both</em> sides of the duplex. Use <code>duplex.sink = abortable.sink(duplex.sink)</code> or <code>duplex.source = abortable.source(duplex.source)</code> to abort just the sink or the source.</p>
+				<a href="#codeabortableduplexduplex-signalscode" id="codeabortableduplexduplex-signalscode" style="color: inherit; text-decoration: none;">
+					<h3><code>abortable.duplex(duplex, signals)</code></h3>
+				</a>
+				<p>The same as <a href="#abortablesource-signals"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it"><code>duplex</code></a> abortable via any one of the passed <code>AbortSignal</code>&#39;s. Returns a new duplex that wraps the passed <code>duplex</code> and makes it abortable via the passed <code>signal</code> parameters.</p>
+				<p>Note that this will abort <em>both</em> sides of the duplex. Use <code>duplex.sink = abortable.sink(duplex.sink)</code> or <code>duplex.source = abortable.source(duplex.source)</code> to abort just the sink or the source.</p>
+				<a href="#related" id="related" style="color: inherit; text-decoration: none;">
+					<h2>Related</h2>
+				</a>
+				<ul>
+					<li><a href="https://www.npmjs.com/package/it-pipe"><code>it-pipe</code></a> Utility to &quot;pipe&quot; async iterables together</li>
+				</ul>
+				<a href="#contribute" id="contribute" style="color: inherit; text-decoration: none;">
+					<h2>Contribute</h2>
+				</a>
+				<p>Feel free to dive in! <a href="https://github.com/alanshaw/abortable-iterator/issues/new">Open an issue</a> or submit PRs.</p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p><a href="LICENSE">MIT</a> © Alan Shaw</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/aborterror.html" class="tsd-kind-icon">Abort<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-not-exported">
+						<a href="globals.html#duplex" class="tsd-kind-icon">Duplex</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-not-exported">
+						<a href="globals.html#options" class="tsd-kind-icon">Options</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-not-exported">
+						<a href="globals.html#signals" class="tsd-kind-icon">Signals</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-not-exported">
+						<a href="globals.html#sink" class="tsd-kind-icon">Sink</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-not-exported">
+						<a href="globals.html#source" class="tsd-kind-icon">Source</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-not-exported">
+						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#duplex" class="tsd-kind-icon">duplex</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#sink" class="tsd-kind-icon">sink</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#source" class="tsd-kind-icon">source</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#transform" class="tsd-kind-icon">transform</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
