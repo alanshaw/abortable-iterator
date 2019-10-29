@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run lint && nyc --reporter=lcov --reporter=text ava --verbose",
-    "lint": "standard"
+    "lint": "standard",
+    "build:docs": "typedoc ."
   },
   "keywords": [
     "async",

@@ -3,7 +3,7 @@
     "target": "es2018"
   },
   "typedocOptions": {
-    "name": "abortable",
+    "name": "abortable-iterator",
     "mode": "file",
     "out": "docs",
     "includeDeclarations": true,
