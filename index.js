@@ -57,7 +57,11 @@ const toMultiAbortableSource = (source, signals) => {
 
         // End the iterator if it is a generator
         if (typeof source.return === 'function') {
-          await source.return()
+          source.return().catch(err => {
+            if (aborter.options.onReturnError) {
+              aborter.options.onReturnError(err)
+            }
+          })
         }
 
         if (isKnownAborter && aborter.options.returnOnAbort) {

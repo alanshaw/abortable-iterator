@@ -9,6 +9,7 @@ type Options<T> = {
   abortMessage?: string
   abortCode?: string
   returnOnAbort?: boolean
+  onReturnError?: (err: Error) => void
 }
 
 type Signals<T> = {
