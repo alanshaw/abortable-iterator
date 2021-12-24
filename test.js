@@ -26,6 +26,97 @@ test('should abort', async t => {
   t.is(err.code, 'ABORT_ERR')
 })
 
+test('should abort a slow iterator', async t => {
+  // should finish before slow read
+  t.timeout(1000)
+
+  const controller = new AbortController()
+  const iterator = (async function * () {
+    // never ending read
+    await new Promise(() => {})
+    return 'hello world'
+  }())
+
+  // Abort after 10ms
+  setTimeout(() => controller.abort(), 10)
+
+  const err = await t.throwsAsync(async () => {
+    for await (const value of abortable(iterator, controller.signal)) {
+      t.log(value)
+    }
+  })
+
+  t.is(err.type, 'aborted')
+  t.is(err.code, 'ABORT_ERR')
+})
+
+test('should pass error to onReturnError', async t => {
+  // should finish before slow read
+  t.timeout(1000)
+
+  const throwErr = new Error('Kaboom!')
+  const controller = new AbortController()
+  const iterator = {
+    next: async () => {
+      // never ending read
+      await new Promise(() => {})
+      return 'hello world'
+    },
+    return: async () => {
+      throw throwErr
+    }
+  }
+
+  // Abort after 10ms
+  setTimeout(() => controller.abort(), 10)
+  let returnedErr
+
+  const err = await t.throwsAsync(async () => {
+    for await (const value of abortable(iterator, controller.signal, {
+      onReturnError: (e) => {
+        returnedErr = e
+      }
+    })) {
+      t.log(value)
+    }
+  })
+
+  t.is(err.type, 'aborted')
+  t.is(err.code, 'ABORT_ERR')
+  t.is(returnedErr, throwErr)
+})
+
+test('should swallow error when no onReturnError callback passed', async t => {
+  // should finish before slow read
+  t.timeout(1000)
+
+  let threw = false
+  const controller = new AbortController()
+  const iterator = {
+    next: async () => {
+      // never ending read
+      await new Promise(() => {})
+    },
+    return: async () => {
+      threw = true
+      throw new Error('Kaboom!')
+    }
+  }
+
+  // Abort after 10ms
+  setTimeout(() => controller.abort(), 10)
+
+  const err = await t.throwsAsync(async () => {
+    for await (const value of abortable(iterator, controller.signal)) {
+      t.log(value)
+    }
+  })
+
+  t.is(err.type, 'aborted')
+  t.is(err.code, 'ABORT_ERR')
+  t.true(threw)
+})
+
 test('should multi abort', async t => {
   const controller0 = new AbortController()
   const controller1 = new AbortController()

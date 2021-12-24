@@ -84,6 +84,7 @@ Make any iterator or iterable abortable via an `AbortSignal`.
 | options.abortMessage | `String` | The message that the error will have if the iterator is aborted. Default "The operation was aborted" |
 | options.abortCode | `String`\|`Number` | The value assigned to the `code` property of the error that is thrown if the iterator is aborted. Default "ABORT_ERR" |
 | options.returnOnAbort | `Boolean` | Instead of throwing the abort error, just return from iterating over the source stream. |
+| options.onReturnError | `Function` | When a generator is aborted, we call `.return` on it - if this function errors the error value will be passed to the `.onReturnError` callback if passed. Default `null` |
 
 #### Returns
 
