@@ -189,9 +189,11 @@ test('should complete successfully', async t => {
   // Abort after 10ms
   setTimeout(() => controller.abort(), 10)
 
-  for await (const value of abortable(iterator, controller.signal)) {
-    t.log(value)
-  }
+  await t.notThrowsAsync(async () => {
+    for await (const value of abortable(iterator, controller.signal)) {
+      t.log(value)
+    }
+  })
 })
 
 test('should throw for non iterator/iterable', t => {
