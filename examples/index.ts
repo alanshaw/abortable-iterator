@@ -1,5 +1,4 @@
-const abortable = require('./')
-const AbortController = require('abort-controller')
+import { abortableSource } from 'abortable-iterator'
 
 async function main () {
   // An example function that creates an async iterator that yields an increasing
@@ -16,7 +15,7 @@ async function main () {
 
   // Make everySecond abortable!
   const controller = new AbortController()
-  const abortableEverySecond = abortable(everySecond, controller.signal)
+  const abortableEverySecond = abortableSource(everySecond, controller.signal)
 
   // Abort after 5 seconds
   setTimeout(() => controller.abort(), 5000)
