@@ -1,6 +1,6 @@
 {
   "name": "abortable-iterator",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Make any iterator or iterable abortable via an AbortSignal",
   "type": "module",
   "types": "./dist/src/index.d.ts",
