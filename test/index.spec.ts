@@ -193,7 +193,7 @@ describe('abortable-iterator', () => {
       .to.eventually.be.rejected.with.property('type', 'aborted')
   })
 
-  it.skip('should abort a duplex used as a transform', async () => {
+  it('should abort a duplex used as a transform', async () => {
     const controller = new AbortController()
     const duplex: Duplex<number> = {
       source: forever(),
