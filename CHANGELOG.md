@@ -1,3 +1,10 @@
+### [4.0.1](https://github.com/alanshaw/abortable-iterator/compare/v4.0.0...v4.0.1) (2022-01-13)
+
+
+### Bug Fixes
+
+* re-enable transform duplex test ([#17](https://github.com/alanshaw/abortable-iterator/issues/17)) ([fcbf06d](https://github.com/alanshaw/abortable-iterator/commit/fcbf06ddb1054ecc806fadc5ed632d2dc2601e76))
+
 ## [4.0.0](https://github.com/alanshaw/abortable-iterator/compare/v3.0.1...v4.0.0) (2022-01-12)
 
 
