@@ -1,3 +1,10 @@
+### [4.0.2](https://github.com/alanshaw/abortable-iterator/compare/v4.0.1...v4.0.2) (2022-01-14)
+
+
+### Tests
+
+* adds test for synchronous generator ([#19](https://github.com/alanshaw/abortable-iterator/issues/19)) ([3524a3f](https://github.com/alanshaw/abortable-iterator/commit/3524a3fcbbc7b8192b2aeecfd9b484169c2a75a3)), closes [#18](https://github.com/alanshaw/abortable-iterator/issues/18)
+
 ### [4.0.1](https://github.com/alanshaw/abortable-iterator/compare/v4.0.0...v4.0.1) (2022-01-13)
 
 
