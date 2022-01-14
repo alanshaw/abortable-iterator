@@ -227,4 +227,20 @@ describe('abortable-iterator', () => {
     ))
       .to.eventually.be.rejected.with.property('type', 'aborted')
   })
+
+  it('should abort a synchronous generator', async () => {
+    const controller = new AbortController()
+    const iterator = abortableSource((function * () {
+      while (true) {
+        yield Math.random()
+      }
+    })(), controller.signal)
+
+    await expect((async () => {
+      for await (const _ of iterator) { // eslint-disable-line @typescript-eslint/no-unused-vars
+        controller.abort()
+      }
+    })())
+      .to.eventually.be.rejected.with.property('type', 'aborted')
+  })
 })
