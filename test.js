@@ -219,3 +219,27 @@ test('should abort if already aborted', async t => {
   t.is(err.type, 'aborted')
   t.is(err.code, 'ABORT_ERR')
 })
+
+test('should abort a synchronous generator', async t => {
+  const controller = new AbortController()
+  const iterator = abortable((function * () {
+    while (true) {
+      yield Math.random()
+    }
+  })(), controller.signal)
+
+  // Abort after 10ms
+  setTimeout(() => controller.abort(), 10)
+
+  const err = await t.throwsAsync(async () => {
+    for await (const value of iterator) {
+      t.log(value)
+      await new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), 100)
+      })
+    }
+  })
+
+  t.is(err.type, 'aborted')
+  t.is(err.code, 'ABORT_ERR')
+})

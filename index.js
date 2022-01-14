@@ -57,11 +57,21 @@ const toMultiAbortableSource = (source, signals) => {
 
         // End the iterator if it is a generator
         if (typeof source.return === 'function') {
-          source.return().catch(err => {
-            if (aborter.options.onReturnError) {
+          try {
+            const p = source.return()
+
+            if (p instanceof Promise) { // eslint-disable-line max-depth
+              p.catch(err => {
+                if (aborter.options.onReturnError != null) {
+                  aborter.options.onReturnError(err)
+                }
+              })
+            }
+          } catch (err) {
+            if (aborter.options.onReturnError != null) { // eslint-disable-line max-depth
               aborter.options.onReturnError(err)
             }
-          })
+          }
         }
 
         if (isKnownAborter && aborter.options.returnOnAbort) {
