@@ -1,4 +1,4 @@
-import { expect } from 'aegir/utils/chai.js'
+import { expect } from 'aegir/chai'
 import { abortableDuplex, abortableSink, abortableSource, abortableTransform } from '../src/index.js'
 import drain from 'it-drain'
 import delay from 'delay'
