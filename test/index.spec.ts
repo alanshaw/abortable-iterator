@@ -43,7 +43,6 @@ describe('abortable-iterator', () => {
       next: async () => {
         // never ending read
         await new Promise(() => {})
-        return 'hello world'
       },
       return: async () => {
         throw throwErr
