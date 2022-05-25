@@ -49,7 +49,7 @@ export function abortableSource <T> (source: Source<T>, signal: AbortSignal, opt
 
         if (isKnownAborter && (opts.onAbort != null)) {
           // Do any custom abort handling for the iterator
-          await opts.onAbort(source)
+          opts.onAbort(source)
         }
 
         // End the iterator if it is a generator

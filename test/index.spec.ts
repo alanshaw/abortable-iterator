@@ -92,14 +92,10 @@ describe('abortable-iterator', () => {
   it('should abort with onAbort handler', async () => {
     const controller = new AbortController()
 
-    // Ensure we allow async cleanup
     let onAbortCalled = false
-    const onAbort = async () => await new Promise<void>(resolve => {
-      setTimeout(() => {
-        onAbortCalled = true
-        resolve()
-      }, 1000)
-    })
+    const onAbort = () => {
+      onAbortCalled = true
+    }
 
     // Abort after 10ms
     setTimeout(() => controller.abort(), 10)
