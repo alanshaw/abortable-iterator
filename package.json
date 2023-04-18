@@ -169,12 +169,12 @@
   },
   "dependencies": {
     "get-iterator": "^2.0.0",
-    "it-stream-types": "^1.0.3"
+    "it-stream-types": "^2.0.1"
   },
   "devDependencies": {
     "aegir": "^38.1.7",
     "delay": "^5.0.0",
-    "it-drain": "^2.0.1",
-    "it-pipe": "^2.0.2"
+    "it-drain": "^3.0.1",
+    "it-pipe": "^3.0.1"
   }
 }
