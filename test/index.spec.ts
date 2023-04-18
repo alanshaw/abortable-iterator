@@ -1,11 +1,11 @@
-import { expect } from 'aegir/utils/chai.js'
+import { expect } from 'aegir/chai'
 import { abortableDuplex, abortableSink, abortableSource, abortableTransform } from '../src/index.js'
 import drain from 'it-drain'
 import delay from 'delay'
 import { pipe } from 'it-pipe'
 import type { Sink, Transform, Duplex } from 'it-stream-types'
 
-async function * forever (interval = 1) {
+async function * forever (interval = 1): AsyncGenerator<number, void, unknown> {
   // Never ends!
   while (true) {
     if (interval > 0) {
@@ -20,7 +20,7 @@ describe('abortable-iterator', () => {
     const controller = new AbortController()
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(drain(abortableSource(forever(), controller.signal)))
       .to.eventually.be.rejected.with.property('type', 'aborted')
@@ -30,7 +30,7 @@ describe('abortable-iterator', () => {
     const controller = new AbortController()
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(drain(abortableSource(forever(6000), controller.signal)))
       .to.eventually.be.rejected.with.property('type', 'aborted')
@@ -51,7 +51,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
     let returnedErr
 
     // @ts-expect-error wat
@@ -80,7 +80,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     // @ts-expect-error wat
     await expect(drain(abortableSource(iterator, controller.signal)))
@@ -94,15 +94,12 @@ describe('abortable-iterator', () => {
 
     // Ensure we allow async cleanup
     let onAbortCalled = false
-    const onAbort = async () => await new Promise<void>(resolve => {
-      setTimeout(() => {
-        onAbortCalled = true
-        resolve()
-      }, 1000)
-    })
+    const onAbort = (): void => {
+      onAbortCalled = true
+    }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(drain(abortableSource(forever(1000), controller.signal, { onAbort })))
       .to.eventually.be.rejected.with.property('type', 'aborted')
@@ -114,12 +111,12 @@ describe('abortable-iterator', () => {
     const controller = new AbortController()
     const iterator = (async function * () {
       yield new Promise((resolve, reject) => {
-        setTimeout(() => resolve(Math.random()))
+        setTimeout(() => { resolve(Math.random()) })
       })
     })()
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(drain(abortableSource(iterator, controller.signal)))
       .to.eventually.be.undefined()
@@ -150,7 +147,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(pipe(
       forever(),
@@ -166,7 +163,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(pipe(
       forever(),
@@ -184,7 +181,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(pipe(
       abortableDuplex(duplex, controller.signal),
@@ -201,7 +198,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(pipe(
       forever(),
@@ -219,7 +216,7 @@ describe('abortable-iterator', () => {
     }
 
     // Abort after 10ms
-    setTimeout(() => controller.abort(), 10)
+    setTimeout(() => { controller.abort() }, 10)
 
     await expect(pipe(
       forever(),

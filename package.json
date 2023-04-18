@@ -2,15 +2,44 @@
   "name": "abortable-iterator",
   "version": "4.0.2",
   "description": "Make any iterator or iterable abortable via an AbortSignal",
+  "author": "Alan Shaw",
+  "license": "Apache-2.0 OR MIT",
+  "homepage": "https://github.com/alanshaw/abortable-iterator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanshaw/abortable-iterator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alanshaw/abortable-iterator/issues"
+  },
+  "keywords": [
+    "AbortController",
+    "AbortSignal",
+    "abort",
+    "abortable",
+    "async",
+    "cancel",
+    "iterator",
+    "signal",
+    "stop"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
         "*",
-        "*/index",
         "dist/*",
-        "dist/*/index",
+        "dist/src/*",
+        "dist/src/*/index"
+      ],
+      "src/*": [
+        "*",
+        "dist/*",
         "dist/src/*",
         "dist/src/*/index"
       ]
@@ -18,15 +47,17 @@
   },
   "files": [
     "src",
-    "dist/src",
+    "dist",
     "!dist/test",
     "!**/*.tsbuildinfo"
   ],
   "exports": {
     ".": {
+      "types": "./dist/src/index.d.ts",
       "import": "./dist/src/index.js"
     },
     "./duplex": {
+      "types": "./dist/src/duplex.d.ts",
       "import": "./dist/src/duplex.js"
     }
   },
@@ -63,15 +94,15 @@
               "release": "patch"
             },
             {
-              "type": "chore",
-              "release": "patch"
-            },
-            {
               "type": "docs",
               "release": "patch"
             },
             {
               "type": "test",
+              "release": "patch"
+            },
+            {
+              "type": "deps",
               "release": "patch"
             },
             {
@@ -101,7 +132,11 @@
               },
               {
                 "type": "docs",
-                "section": "Trivial Changes"
+                "section": "Documentation"
+              },
+              {
+                "type": "deps",
+                "section": "Dependencies"
               },
               {
                 "type": "test",
@@ -129,37 +164,17 @@
     "test:firefox-webworker": "npm run test -- -t webworker -- --browser firefox",
     "test:node": "npm run test -- -t node --cov",
     "test:electron-main": "npm run test -- -t electron-main",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "docs": "aegir docs"
   },
-  "keywords": [
-    "async",
-    "iterator",
-    "abort",
-    "abortable",
-    "cancel",
-    "stop",
-    "AbortController",
-    "AbortSignal",
-    "signal"
-  ],
-  "author": "Alan Shaw",
-  "license": "MIT",
+  "dependencies": {
+    "get-iterator": "^2.0.0",
+    "it-stream-types": "^1.0.3"
+  },
   "devDependencies": {
     "aegir": "^38.1.7",
     "delay": "^5.0.0",
     "it-drain": "^2.0.1",
     "it-pipe": "^2.0.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alanshaw/abortable-iterator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/alanshaw/abortable-iterator/issues"
-  },
-  "homepage": "https://github.com/alanshaw/abortable-iterator#readme",
-  "dependencies": {
-    "get-iterator": "^2.0.0",
-    "it-stream-types": "^1.0.3"
   }
 }
