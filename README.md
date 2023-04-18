@@ -1,18 +1,43 @@
-# abortable-iterator
+# abortable-iterator <!-- omit in toc -->
 
-[![Build Status](https://github.com/alanshaw/abortable-iterator/actions/workflows/js-test-and-release.yml/badge.svg?branch=master)](https://github.com/alanshaw/abortable-iterator/actions/workflows/js-test-and-release.yml)
-[![Dependencies Status](https://status.david-dm.org/gh/alanshaw/abortable-iterator.svg)](https://david-dm.org/alanshaw/abortable-iterator)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![codecov](https://img.shields.io/codecov/c/github/alanshaw/abortable-iterator.svg?style=flat-square)](https://codecov.io/gh/alanshaw/abortable-iterator)
+[![CI](https://img.shields.io/github/actions/workflow/status/alanshaw/abortable-iterator/js-test-and-release.yml?branch=master\&style=flat-square)](https://github.com/alanshaw/abortable-iterator/actions/workflows/js-test-and-release.yml?query=branch%3Amaster)
 
 > Make any iterator or iterable abortable via an AbortSignal
 
-The [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) is used in the fetch API to abort in flight requests from, for example, a timeout or user action. The same concept is used here to halt iteration of an async iterator.
+## Table of contents <!-- omit in toc -->
+
+- [Install](#install)
+  - [Browser `<script>` tag](#browser-script-tag)
+- [Usage](#usage)
+- [API](#api)
+  - [`abortableSource(source, signal, [options])`](#abortablesourcesource-signal-options)
+    - [Parameters](#parameters)
+    - [Returns](#returns)
+  - [`abortableSink(sink, signal, [options])`](#abortablesinksink-signal-options)
+  - [`abortableTransform(transform, signal, [options])`](#abortabletransformtransform-signal-options)
+  - [`abortableDuplex(duplex, signal, [options])`](#abortableduplexduplex-signal-options)
+- [Related](#related)
+- [Contribute](#contribute)
+- [API Docs](#api-docs)
+- [License](#license)
+- [Contribution](#contribution)
 
 ## Install
 
-```sh
-npm install abortable-iterator
+```console
+$ npm i abortable-iterator
 ```
+
+### Browser `<script>` tag
+
+Loading this module through a script tag will make it's exports available as `AbortableIterator` in the global namespace.
+
+```html
+<script src="https://unpkg.com/abortable-iterator/dist/index.min.js"></script>
+```
+
+The [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) is used in the fetch API to abort in flight requests from, for example, a timeout or user action. The same concept is used here to halt iteration of an async iterator.
 
 ## Usage
 
@@ -63,33 +88,34 @@ import {
 } from 'abortable-iterator'
 ```
 
-* [`abortableSource(source, signal, [options])`](#abortablesource-signal-options)
-* [`abortableSink(sink, signal, [options])`](#abortablesinksink-signal-options)
-* [`abortableTransform(transform, signal, [options])`](#abortabletransformtransform-signal-options)
-* [`abortableDuplex(duplex, signal, [options])`](#abortableduplexduplex-signal-options)
+- [`abortableSource(source, signal, [options])`](#abortablesource-signal-options)
+- [`abortableSink(sink, signal, [options])`](#abortablesinksink-signal-options)
+- [`abortableTransform(transform, signal, [options])`](#abortabletransformtransform-signal-options)
+- [`abortableDuplex(duplex, signal, [options])`](#abortableduplexduplex-signal-options)
 
 ### `abortableSource(source, signal, [options])`
+
 **(alias for `abortable.source(source, signal, [options])`)**
 
 Make any iterator or iterable abortable via an `AbortSignal`.
 
 #### Parameters
 
-| Name | Type | Description |
-|------|------|-------------|
-| source | [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol)\|[`Iterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | The iterator or iterable object to make abortable |
-| signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | Signal obtained from `AbortController.signal` which is used to abort the iterator. |
-| options | `Object` | (optional) options |
-| options.onAbort | `Function` | An (async) function called when the iterator is being aborted, before the abort error is thrown. Default `null` |
-| options.abortMessage | `String` | The message that the error will have if the iterator is aborted. Default "The operation was aborted" |
-| options.abortCode | `String`\|`Number` | The value assigned to the `code` property of the error that is thrown if the iterator is aborted. Default "ABORT_ERR" |
-| options.returnOnAbort | `Boolean` | Instead of throwing the abort error, just return from iterating over the source stream. |
-| options.onReturnError | `Function` | When a generator is aborted, we call `.return` on it - if this function errors the error value will be passed to the `.onReturnError` callback if passed. Default `null` |
+| Name                  | Type                                                                                                                                                                                                                                                 | Description                                                                                                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| source                | [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol)\|[`Iterator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | The iterator or iterable object to make abortable                                                                                                                        |
+| signal                | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)                                                                                                                                                                        | Signal obtained from `AbortController.signal` which is used to abort the iterator.                                                                                       |
+| options               | `Object`                                                                                                                                                                                                                                             | (optional) options                                                                                                                                                       |
+| options.onAbort       | `Function`                                                                                                                                                                                                                                           | An (async) function called when the iterator is being aborted, before the abort error is thrown. Default `null`                                                          |
+| options.abortMessage  | `String`                                                                                                                                                                                                                                             | The message that the error will have if the iterator is aborted. Default "The operation was aborted"                                                                     |
+| options.abortCode     | `String`\|`Number`                                                                                                                                                                                                                                   | The value assigned to the `code` property of the error that is thrown if the iterator is aborted. Default "ABORT\_ERR"                                                   |
+| options.returnOnAbort | `Boolean`                                                                                                                                                                                                                                            | Instead of throwing the abort error, just return from iterating over the source stream.                                                                                  |
+| options.onReturnError | `Function`                                                                                                                                                                                                                                           | When a generator is aborted, we call `.return` on it - if this function errors the error value will be passed to the `.onReturnError` callback if passed. Default `null` |
 
 #### Returns
 
-| Type | Description |
-|------|-------------|
+| Type                                                                                                                      | Description                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol) | An iterator that wraps the passed `source` parameter that makes it abortable via the passed `signal` parameter. |
 
 The returned iterator will `throw` an `AbortError` when it is aborted that has a `type` with the value `aborted` and `code` property with the value `ABORT_ERR` by default.
@@ -106,16 +132,27 @@ The same as [`abortable.source`](#abortablesource-signal-options) except this ma
 
 The same as [`abortable.source`](#abortablesource-signal-options) except this makes the passed [`duplex`](https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it) abortable. Returns a new duplex that wraps the passed `duplex` and makes it abortable via the passed `signal` parameter.
 
-Note that this will abort _both_ sides of the duplex. Use `duplex.sink = abortable.sink(duplex.sink)` or `duplex.source = abortable.source(duplex.source)` to abort just the sink or the source.
+Note that this will abort *both* sides of the duplex. Use `duplex.sink = abortable.sink(duplex.sink)` or `duplex.source = abortable.source(duplex.source)` to abort just the sink or the source.
 
 ## Related
 
-* [`it-pipe`](https://www.npmjs.com/package/it-pipe) Utility to "pipe" async iterables together
+- [`it-pipe`](https://www.npmjs.com/package/it-pipe) Utility to "pipe" async iterables together
 
 ## Contribute
 
 Feel free to dive in! [Open an issue](https://github.com/alanshaw/abortable-iterator/issues/new) or submit PRs.
 
+## API Docs
+
+- <https://alanshaw.github.io/abortable-iterator>
+
 ## License
 
-[MIT](LICENSE) © Alan Shaw
+Licensed under either of
+
+- Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.

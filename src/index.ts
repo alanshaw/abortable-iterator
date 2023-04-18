@@ -1,3 +1,49 @@
+/**
+ * @packageDocumentation
+ *
+ * @example
+ *
+ * ```js
+ * import { abortableSource } from 'abortable-iterator'
+ *
+ * async function main () {
+ *   // An example function that creates an async iterator that yields an increasing
+ *   // number every x milliseconds and NEVER ENDS!
+ *   const asyncCounter = async function * (start, delay) {
+ *     let i = start
+ *     while (true) {
+ *       yield new Promise(resolve => setTimeout(() => resolve(i++), delay))
+ *     }
+ *   }
+ *
+ *   // Create a counter that'll yield numbers from 0 upwards every second
+ *   const everySecond = asyncCounter(0, 1000)
+ *
+ *   // Make everySecond abortable!
+ *   const controller = new AbortController()
+ *   const abortableEverySecond = abortableSource(everySecond, controller.signal)
+ *
+ *   // Abort after 5 seconds
+ *   setTimeout(() => controller.abort(), 5000)
+ *
+ *   try {
+ *     // Start the iteration, which will throw after 5 seconds when it is aborted
+ *     for await (const n of abortableEverySecond) {
+ *       console.log(n)
+ *     }
+ *   } catch (err) {
+ *     if (err.code === 'ERR_ABORTED') {
+ *       // Expected - all ok :D
+ *     } else {
+ *       throw err
+ *     }
+ *   }
+ * }
+ *
+ * main()
+ * ```
+ */
+
 import { AbortError } from './abort-error.js'
 import { getIterator } from 'get-iterator'
 import type { Duplex, Source, Sink } from 'it-stream-types'
@@ -11,13 +57,13 @@ export interface Options<T> {
 }
 
 // Wrap an iterator to make it abortable, allow cleanup when aborted via onAbort
-export function abortableSource <T> (source: Source<T>, signal: AbortSignal, options?: Options<T>) {
+export function abortableSource <T> (source: Source<T>, signal: AbortSignal, options?: Options<T>): AsyncGenerator<Awaited<T>, void, unknown> {
   const opts: Options<T> = options ?? {}
   const iterator = getIterator<T>(source)
 
-  async function * abortable () {
+  async function * abortable (): AsyncGenerator<Awaited<T>, void, unknown> {
     let nextAbortHandler: (() => void) | null
-    const abortHandler = () => {
+    const abortHandler = (): void => {
       if (nextAbortHandler != null) nextAbortHandler()
     }
 
@@ -49,7 +95,7 @@ export function abortableSource <T> (source: Source<T>, signal: AbortSignal, opt
 
         if (isKnownAborter && (opts.onAbort != null)) {
           // Do any custom abort handling for the iterator
-          await opts.onAbort(source)
+          opts.onAbort(source)
         }
 
         // End the iterator if it is a generator
@@ -95,7 +141,7 @@ export function abortableSink <T, R> (sink: Sink<T, R>, signal: AbortSignal, opt
   return (source: Source<T>) => sink(abortableSource(source, signal, options))
 }
 
-export function abortableDuplex <TSource, TSink = TSource, RSink = Promise<void>> (duplex: Duplex<TSource, TSink, RSink>, signal: AbortSignal, options?: Options<TSource>) {
+export function abortableDuplex <TSource, TSink = TSource, RSink = Promise<void>> (duplex: Duplex<TSource, TSink, RSink>, signal: AbortSignal, options?: Options<TSource>): Duplex<Awaited<TSource>, TSink, RSink> {
   return {
     sink: abortableSink(duplex.sink, signal, {
       ...options,
