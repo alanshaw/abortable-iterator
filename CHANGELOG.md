@@ -1,3 +1,10 @@
+### [4.0.3](https://github.com/alanshaw/abortable-iterator/compare/v4.0.2...v4.0.3) (2023-04-18)
+
+
+### Trivial Changes
+
+* **deps-dev:** bump it-drain from 1.0.5 to 2.0.1 ([#76](https://github.com/alanshaw/abortable-iterator/issues/76)) ([f9fd360](https://github.com/alanshaw/abortable-iterator/commit/f9fd360774fb203647ca4ee2efb4f4024dc8e185))
+
 ### [4.0.2](https://github.com/alanshaw/abortable-iterator/compare/v4.0.1...v4.0.2) (2022-01-14)
 
 
