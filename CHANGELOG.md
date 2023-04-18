@@ -1,3 +1,19 @@
+## [5.0.0](https://github.com/alanshaw/abortable-iterator/compare/v4.0.3...v5.0.0) (2023-04-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump it-stream-types from 1.0.5 to 2.0.1 (#82)
+
+### Trivial Changes
+
+* **deps-dev:** bump aegir from 36.2.3 to 38.1.7 ([#75](https://github.com/alanshaw/abortable-iterator/issues/75)) ([53030ba](https://github.com/alanshaw/abortable-iterator/commit/53030bae97c3fb32013a318c491e65c7801e395e))
+
+
+### Dependencies
+
+* bump it-stream-types from 1.0.5 to 2.0.1 ([#82](https://github.com/alanshaw/abortable-iterator/issues/82)) ([0862e0f](https://github.com/alanshaw/abortable-iterator/commit/0862e0fa25a9da781e6300b85bb5f69d8a375cec))
+
 ### [4.0.3](https://github.com/alanshaw/abortable-iterator/compare/v4.0.2...v4.0.3) (2023-04-18)
 
 

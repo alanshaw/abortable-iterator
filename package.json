@@ -1,6 +1,6 @@
 {
   "name": "abortable-iterator",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "description": "Make any iterator or iterable abortable via an AbortSignal",
   "author": "Alan Shaw",
   "license": "Apache-2.0 OR MIT",
