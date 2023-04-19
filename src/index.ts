@@ -139,11 +139,11 @@ export function abortableSource <T> (source: Source<T>, signal: AbortSignal, opt
   return abortable()
 }
 
-export function abortableSink <T, R = Promise<void>> (sink: Sink<AsyncIterable<T>, R>, signal: AbortSignal, options?: Options<T>): Sink<AsyncIterable<T>, R> {
+export function abortableSink <T, R = Promise<void>> (sink: Sink<AsyncIterable<T>, R>, signal: AbortSignal, options?: Options<T>): Sink<Source<T>, R> {
   return (source: Source<T>) => sink(abortableSource(source, signal, options))
 }
 
-export function abortableDuplex <TSource, TSink = TSource, RSink = Promise<void>> (duplex: Duplex<AsyncIterable<TSource>, AsyncIterable<TSink>, RSink>, signal: AbortSignal, options?: Options<TSource>): Duplex<AsyncGenerator<TSource>, AsyncIterable<TSink>, RSink> {
+export function abortableDuplex <TSource, TSink = TSource, RSink = Promise<void>> (duplex: Duplex<AsyncIterable<TSource>, Source<TSink>, RSink>, signal: AbortSignal, options?: Options<TSource>): Duplex<AsyncGenerator<TSource>, Source<TSink>, RSink> {
   return {
     sink: abortableSink(duplex.sink, signal, {
       ...options,
