@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/alanshaw/abortable-iterator/compare/v5.0.0...v5.0.1) (2023-04-19)
+
+
+### Bug Fixes
+
+* accept source as a sink input type ([#83](https://github.com/alanshaw/abortable-iterator/issues/83)) ([a75aaab](https://github.com/alanshaw/abortable-iterator/commit/a75aaab2bbf4705127ca9dc08a528ca6cb6058d7))
+
 ## [5.0.0](https://github.com/alanshaw/abortable-iterator/compare/v4.0.3...v5.0.0) (2023-04-18)
 
 
