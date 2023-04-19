@@ -175,7 +175,7 @@ describe('abortable-iterator', () => {
 
   it('should abort a duplex used as a source', async () => {
     const controller = new AbortController()
-    const duplex: Duplex<AsyncIterable<number>> = {
+    const duplex: Duplex<AsyncIterable<number>, Source<number>> = {
       source: forever(),
       sink: async (source) => { await drain(source) }
     }
@@ -192,7 +192,7 @@ describe('abortable-iterator', () => {
 
   it('should abort a duplex used as a transform', async () => {
     const controller = new AbortController()
-    const duplex: Duplex<AsyncIterable<number>> = {
+    const duplex: Duplex<AsyncIterable<number>, Source<number>> = {
       source: forever(),
       sink: drain
     }
@@ -210,7 +210,7 @@ describe('abortable-iterator', () => {
 
   it('should abort a duplex used as a sink', async () => {
     const controller = new AbortController()
-    const duplex: Duplex<AsyncIterable<number>> = {
+    const duplex: Duplex<AsyncIterable<number>, Source<number>> = {
       source: forever(),
       sink: drain
     }
