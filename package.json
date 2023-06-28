@@ -173,7 +173,7 @@
     "it-stream-types": "^2.0.1"
   },
   "devDependencies": {
-    "aegir": "^38.1.7",
+    "aegir": "^39.0.13",
     "delay": "^5.0.0",
     "it-drain": "^3.0.1",
     "it-pipe": "^3.0.1"
