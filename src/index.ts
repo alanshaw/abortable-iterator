@@ -53,6 +53,7 @@ export interface Options<T> {
   onAbort?(source: Source<T>): void
   abortMessage?: string
   abortCode?: string
+  abortName?: string
   returnOnAbort?: boolean
 }
 
@@ -75,14 +76,14 @@ export function abortableSource <T> (source: Source<T>, signal: AbortSignal, opt
       let result: IteratorResult<T, any>
       try {
         if (signal.aborted) {
-          const { abortMessage, abortCode } = opts
-          throw new AbortError(abortMessage, abortCode)
+          const { abortMessage, abortCode, abortName } = opts
+          throw new AbortError(abortMessage, abortCode, abortName)
         }
 
         const abort = new Promise<any>((resolve, reject) => { // eslint-disable-line no-loop-func
           nextAbortHandler = () => {
-            const { abortMessage, abortCode } = opts
-            reject(new AbortError(abortMessage, abortCode))
+            const { abortMessage, abortCode, abortName } = opts
+            reject(new AbortError(abortMessage, abortCode, abortName))
           }
         })
 
