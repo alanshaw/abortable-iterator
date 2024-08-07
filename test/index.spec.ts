@@ -1,8 +1,8 @@
 import { expect } from 'aegir/chai'
-import { abortableDuplex, abortableSink, abortableSource, abortableTransform } from '../src/index.js'
-import drain from 'it-drain'
 import delay from 'delay'
+import drain from 'it-drain'
 import { pipe } from 'it-pipe'
+import { abortableDuplex, abortableSink, abortableSource, abortableTransform } from '../src/index.js'
 import type { Sink, Transform, Duplex, Source } from 'it-stream-types'
 
 async function * forever (interval = 1): AsyncGenerator<number, void, unknown> {

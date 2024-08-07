@@ -155,8 +155,8 @@
   "scripts": {
     "clean": "aegir clean",
     "lint": "aegir lint",
-    "dep-check": "aegir dep-check dist/src/**/*.js dist/test/**/*.js",
-    "build": "tsc",
+    "dep-check": "aegir dep-check",
+    "build": "aegir build",
     "pretest": "npm run build",
     "test": "aegir test -f ./dist/test",
     "test:chrome": "npm run test -- -t browser --cov",
@@ -165,7 +165,7 @@
     "test:firefox-webworker": "npm run test -- -t webworker -- --browser firefox",
     "test:node": "npm run test -- -t node --cov",
     "test:electron-main": "npm run test -- -t electron-main",
-    "release": "semantic-release",
+    "release": "aegir release",
     "docs": "aegir docs"
   },
   "dependencies": {

@@ -1,4 +1,3 @@
-
 export class AbortError extends Error {
   type: string
   code: string
