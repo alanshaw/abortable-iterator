@@ -240,4 +240,19 @@ describe('abortable-iterator', () => {
     })())
       .to.eventually.be.rejected.with.property('type', 'aborted')
   })
+
+  it('should override abort error properties', async () => {
+    const controller = new AbortController()
+    controller.abort()
+
+    const err = await drain(abortableSource(forever(), controller.signal, {
+      abortCode: 'custom code',
+      abortMessage: 'custom message',
+      abortName: 'custom name'
+    })).catch(err => err)
+
+    expect(err).to.have.property('code', 'custom code')
+    expect(err).to.have.property('message', 'custom message')
+    expect(err).to.have.property('name', 'custom name')
+  })
 })
