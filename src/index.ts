@@ -44,13 +44,13 @@
  * ```
  */
 
-import { AbortError } from './abort-error.js'
 import { getIterator } from 'get-iterator'
+import { AbortError } from './abort-error.js'
 import type { Duplex, Source, Sink } from 'it-stream-types'
 
 export interface Options<T> {
-  onReturnError?: (err: Error) => void
-  onAbort?: (source: Source<T>) => void
+  onReturnError?(err: Error): void
+  onAbort?(source: Source<T>): void
   abortMessage?: string
   abortCode?: string
   returnOnAbort?: boolean
