@@ -1,80 +1,81 @@
-# abortable-iterator <!-- omit in toc -->
+# abortable-iterator
 
 [![codecov](https://img.shields.io/codecov/c/github/alanshaw/abortable-iterator.svg?style=flat-square)](https://codecov.io/gh/alanshaw/abortable-iterator)
 [![CI](https://img.shields.io/github/actions/workflow/status/alanshaw/abortable-iterator/js-test-and-release.yml?branch=master\&style=flat-square)](https://github.com/alanshaw/abortable-iterator/actions/workflows/js-test-and-release.yml?query=branch%3Amaster)
 
 > Make any iterator or iterable abortable via an AbortSignal
 
-## Table of contents <!-- omit in toc -->
+# About
 
-- [Install](#install)
-  - [Browser `<script>` tag](#browser-script-tag)
-- [Usage](#usage)
-- [API](#api)
-  - [`abortableSource(source, signal, [options])`](#abortablesourcesource-signal-options)
-    - [Parameters](#parameters)
-    - [Returns](#returns)
-  - [`abortableSink(sink, signal, [options])`](#abortablesinksink-signal-options)
-  - [`abortableTransform(transform, signal, [options])`](#abortabletransformtransform-signal-options)
-  - [`abortableDuplex(duplex, signal, [options])`](#abortableduplexduplex-signal-options)
-- [Related](#related)
-- [Contribute](#contribute)
-- [API Docs](#api-docs)
-- [License](#license)
-- [Contribution](#contribution)
+<!--
 
-## Install
+!IMPORTANT!
+
+Everything in this README between "# About" and "# Install" is automatically
+generated and will be overwritten the next time the doc generator is run.
+
+To make changes to this section, please update the @packageDocumentation section
+of src/index.js or src/index.ts
+
+To experiment with formatting, please run "npm run docs" from the root of this
+repo and examine the changes made.
+
+-->
+
+## Example
+
+```js
+import { abortableSource } from 'abortable-iterator'
+
+async function main () {
+  // An example function that creates an async iterator that yields an increasing
+  // number every x milliseconds and NEVER ENDS!
+  const asyncCounter = async function * (start, delay) {
+    let i = start
+    while (true) {
+      yield new Promise(resolve => setTimeout(() => resolve(i++), delay))
+    }
+  }
+
+  // Create a counter that'll yield numbers from 0 upwards every second
+  const everySecond = asyncCounter(0, 1000)
+
+  // Make everySecond abortable!
+  const controller = new AbortController()
+  const abortableEverySecond = abortableSource(everySecond, controller.signal)
+
+  // Abort after 5 seconds
+  setTimeout(() => controller.abort(), 5000)
+
+  try {
+    // Start the iteration, which will throw after 5 seconds when it is aborted
+    for await (const n of abortableEverySecond) {
+      console.log(n)
+    }
+  } catch (err) {
+    if (err.code === 'ERR_ABORTED') {
+      // Expected - all ok :D
+    } else {
+      throw err
+    }
+  }
+}
+
+main()
+```
+
+# Install
 
 ```console
 $ npm i abortable-iterator
 ```
 
-### Browser `<script>` tag
+## Browser `<script>` tag
 
-Loading this module through a script tag will make it's exports available as `AbortableIterator` in the global namespace.
+Loading this module through a script tag will make its exports available as `AbortableIterator` in the global namespace.
 
 ```html
 <script src="https://unpkg.com/abortable-iterator/dist/index.min.js"></script>
-```
-
-The [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) is used in the fetch API to abort in flight requests from, for example, a timeout or user action. The same concept is used here to halt iteration of an async iterator.
-
-## Usage
-
-```js
-import { abortableSource } from 'abortable-iterator'
-
-// An example function that creates an async iterator that yields an increasing
-// number every x milliseconds and NEVER ENDS!
-const asyncCounter = async function * (start, delay) {
-  let i = start
-  while (true) {
-    yield new Promise(resolve => setTimeout(() => resolve(i++), delay))
-  }
-}
-
-// Create a counter that'll yield numbers from 0 upwards every second
-const everySecond = asyncCounter(0, 1000)
-
-// Make everySecond abortable!
-const controller = new AbortController()
-const abortableEverySecond = abortableSource(everySecond, controller.signal)
-
-// Abort after 5 seconds
-setTimeout(() => controller.abort(), 5000)
-
-try {
-  // Start the iteration, which will throw after 5 seconds when it is aborted
-  for await (const n of abortableEverySecond) {
-    console.log(n)
-  }
-} catch (err) {
-  if (err.code === 'ERR_ABORTED') {
-    // Expected - all ok :D
-  } else {
-    throw err
-  }
-}
 ```
 
 ## API
@@ -138,21 +139,17 @@ Note that this will abort *both* sides of the duplex. Use `duplex.sink = abortab
 
 - [`it-pipe`](https://www.npmjs.com/package/it-pipe) Utility to "pipe" async iterables together
 
-## Contribute
-
-Feel free to dive in! [Open an issue](https://github.com/alanshaw/abortable-iterator/issues/new) or submit PRs.
-
-## API Docs
+# API Docs
 
 - <https://alanshaw.github.io/abortable-iterator>
 
-## License
+# License
 
 Licensed under either of
 
-- Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
-- MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
+- Apache 2.0, ([LICENSE-APACHE](https://github.com/alanshaw/abortable-iterator/LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT ([LICENSE-MIT](https://github.com/alanshaw/abortable-iterator/LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
 
-## Contribution
+# Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
