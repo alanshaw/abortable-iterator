@@ -1,3 +1,23 @@
+## [5.1.0](https://github.com/alanshaw/abortable-iterator/compare/v5.0.1...v5.1.0) (2024-08-07)
+
+### Features
+
+* add `abortName` option to override thrown error name ([#98](https://github.com/alanshaw/abortable-iterator/issues/98)) ([e43efdf](https://github.com/alanshaw/abortable-iterator/commit/e43efdf2fc187d6a325f59c31d2348f1b1269ab0))
+
+### Bug Fixes
+
+* update project config ([#99](https://github.com/alanshaw/abortable-iterator/issues/99)) ([c6660f5](https://github.com/alanshaw/abortable-iterator/commit/c6660f53104c16cad6a608dc42d5a9e91443bcc9))
+
+### Trivial Changes
+
+* add or force update .github/workflows/js-test-and-release.yml ([#95](https://github.com/alanshaw/abortable-iterator/issues/95)) ([b4aeafa](https://github.com/alanshaw/abortable-iterator/commit/b4aeafa15d1b0bc22424f05f31691757c26ad178))
+* delete templates [skip ci] ([#94](https://github.com/alanshaw/abortable-iterator/issues/94)) ([be4d6bb](https://github.com/alanshaw/abortable-iterator/commit/be4d6bb035e8e04f97f5d400ae730aee40037510))
+
+### Dependencies
+
+* **dev:** bump aegir from 38.1.8 to 44.1.0 ([#97](https://github.com/alanshaw/abortable-iterator/issues/97)) ([8dd8a87](https://github.com/alanshaw/abortable-iterator/commit/8dd8a8798d3ce753628e233ee7dd67f80dec6340))
+* **dev:** bump delay from 5.0.0 to 6.0.0 ([#89](https://github.com/alanshaw/abortable-iterator/issues/89)) ([e06ec34](https://github.com/alanshaw/abortable-iterator/commit/e06ec34868f00bd46e40d38fee1b7814675ebe2f))
+
 ## [5.0.1](https://github.com/alanshaw/abortable-iterator/compare/v5.0.0...v5.0.1) (2023-04-19)
 
 
