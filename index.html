@@ -1,0 +1,116 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>abortable-iterator</title><meta name="description" content="Documentation for abortable-iterator"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">abortable-iterator</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h2>abortable-iterator</h2></div><div class="tsd-panel tsd-typography"><a id="md:abortable-iterator" class="tsd-anchor"></a><h1><a href="#md:abortable-iterator">abortable-iterator</a></h1><p><a href="https://codecov.io/gh/alanshaw/abortable-iterator"><img src="https://img.shields.io/codecov/c/github/alanshaw/abortable-iterator.svg?style=flat-square" alt="codecov"></a>
+<a href="https://github.com/alanshaw/abortable-iterator/actions/workflows/js-test-and-release.yml?query=branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/alanshaw/abortable-iterator/js-test-and-release.yml?branch=master&style=flat-square" alt="CI"></a></p>
+<blockquote>
+<p>Make any iterator or iterable abortable via an AbortSignal</p>
+</blockquote>
+<a id="md:about" class="tsd-anchor"></a><h1><a href="#md:about">About</a></h1><!--
+
+!IMPORTANT!
+
+Everything in this README between "# About" and "# Install" is automatically
+generated and will be overwritten the next time the doc generator is run.
+
+To make changes to this section, please update the  section
+of src/index.js or src/index.ts
+
+To experiment with formatting, please run "npm run docs" from the root of this
+repo and examine the changes made.
+
+-->
+
+<a id="md:example" class="tsd-anchor"></a><h2><a href="#md:example">Example</a></h2><pre><code class="language-js"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">abortableSource</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;abortable-iterator&#39;</span><br/><br/><span class="hl-4">async</span><span class="hl-1"> </span><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-5">main</span><span class="hl-1"> () {</span><br/><span class="hl-1">  </span><span class="hl-6">// An example function that creates an async iterator that yields an increasing</span><br/><span class="hl-1">  </span><span class="hl-6">// number every x milliseconds and NEVER ENDS!</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">asyncCounter</span><span class="hl-1"> = </span><span class="hl-4">async</span><span class="hl-1"> </span><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-4">*</span><span class="hl-1"> (</span><span class="hl-2">start</span><span class="hl-1">, </span><span class="hl-2">delay</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-4">let</span><span class="hl-1"> </span><span class="hl-2">i</span><span class="hl-1"> = </span><span class="hl-2">start</span><br/><span class="hl-1">    </span><span class="hl-0">while</span><span class="hl-1"> (</span><span class="hl-4">true</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-0">yield</span><span class="hl-1"> </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-7">Promise</span><span class="hl-1">(</span><span class="hl-2">resolve</span><span class="hl-1"> </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-5">setTimeout</span><span class="hl-1">(() </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-5">resolve</span><span class="hl-1">(</span><span class="hl-2">i</span><span class="hl-1">++), </span><span class="hl-2">delay</span><span class="hl-1">))</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-6">// Create a counter that&#39;ll yield numbers from 0 upwards every second</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-8">everySecond</span><span class="hl-1"> = </span><span class="hl-5">asyncCounter</span><span class="hl-1">(</span><span class="hl-9">0</span><span class="hl-1">, </span><span class="hl-9">1000</span><span class="hl-1">)</span><br/><br/><span class="hl-1">  </span><span class="hl-6">// Make everySecond abortable!</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-8">controller</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-5">AbortController</span><span class="hl-1">()</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-8">abortableEverySecond</span><span class="hl-1"> = </span><span class="hl-5">abortableSource</span><span class="hl-1">(</span><span class="hl-2">everySecond</span><span class="hl-1">, </span><span class="hl-2">controller</span><span class="hl-1">.</span><span class="hl-2">signal</span><span class="hl-1">)</span><br/><br/><span class="hl-1">  </span><span class="hl-6">// Abort after 5 seconds</span><br/><span class="hl-1">  </span><span class="hl-5">setTimeout</span><span class="hl-1">(() </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-2">controller</span><span class="hl-1">.</span><span class="hl-5">abort</span><span class="hl-1">(), </span><span class="hl-9">5000</span><span class="hl-1">)</span><br/><br/><span class="hl-1">  </span><span class="hl-0">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-6">// Start the iteration, which will throw after 5 seconds when it is aborted</span><br/><span class="hl-1">    </span><span class="hl-0">for</span><span class="hl-1"> </span><span class="hl-0">await</span><span class="hl-1"> (</span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-8">n</span><span class="hl-1"> </span><span class="hl-4">of</span><span class="hl-1"> </span><span class="hl-2">abortableEverySecond</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-5">log</span><span class="hl-1">(</span><span class="hl-2">n</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  } </span><span class="hl-0">catch</span><span class="hl-1"> (</span><span class="hl-2">err</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">err</span><span class="hl-1">.</span><span class="hl-2">code</span><span class="hl-1"> === </span><span class="hl-3">&#39;ERR_ABORTED&#39;</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-6">// Expected - all ok :D</span><br/><span class="hl-1">    } </span><span class="hl-0">else</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">throw</span><span class="hl-1"> </span><span class="hl-2">err</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-5">main</span><span class="hl-1">()</span>
+</code><button>Copy</button></pre>
+<a id="md:install" class="tsd-anchor"></a><h1><a href="#md:install">Install</a></h1><pre><code class="language-console"><span class="hl-1">$ npm i abortable-iterator</span>
+</code><button>Copy</button></pre>
+<a id="md:browser-ltscriptgt-tag" class="tsd-anchor"></a><h2><a href="#md:browser-ltscriptgt-tag">Browser <code>&lt;script&gt;</code> tag</a></h2><p>Loading this module through a script tag will make its exports available as <code>AbortableIterator</code> in the global namespace.</p>
+<pre><code class="language-html"><span class="hl-10">&lt;</span><span class="hl-11">script</span><span class="hl-12"> </span><span class="hl-13">src</span><span class="hl-12">=</span><span class="hl-14">&quot;https://unpkg.com/abortable-iterator/dist/index.min.js&quot;</span><span class="hl-10">&gt;&lt;/</span><span class="hl-11">script</span><span class="hl-10">&gt;</span>
+</code><button>Copy</button></pre>
+<a id="md:api" class="tsd-anchor"></a><h2><a href="#md:api">API</a></h2><pre><code class="language-js"><span class="hl-0">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-2">abortableSource</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">abortableSink</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">abortableTransform</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">abortableDuplex</span><br/><span class="hl-1">} </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;abortable-iterator&#39;</span>
+</code><button>Copy</button></pre>
+<ul>
+<li><a href="#md:abortablesource-signal-options"><code>abortableSource(source, signal, [options])</code></a></li>
+<li><a href="#md:abortablesinksink-signal-options"><code>abortableSink(sink, signal, [options])</code></a></li>
+<li><a href="#md:abortabletransformtransform-signal-options"><code>abortableTransform(transform, signal, [options])</code></a></li>
+<li><a href="#md:abortableduplexduplex-signal-options"><code>abortableDuplex(duplex, signal, [options])</code></a></li>
+</ul>
+<a id="md:abortablesourcesource-signal-options" class="tsd-anchor"></a><h3><a href="#md:abortablesourcesource-signal-options"><code>abortableSource(source, signal, [options])</code></a></h3><p><strong>(alias for <code>abortable.source(source, signal, [options])</code>)</strong></p>
+<p>Make any iterator or iterable abortable via an <code>AbortSignal</code>.</p>
+<a id="md:parameters" class="tsd-anchor"></a><h4><a href="#md:parameters">Parameters</a></h4><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>source</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterable_protocol"><code>Iterable</code></a>|<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol"><code>Iterator</code></a></td>
+<td>The iterator or iterable object to make abortable</td>
+</tr>
+<tr>
+<td>signal</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal"><code>AbortSignal</code></a></td>
+<td>Signal obtained from <code>AbortController.signal</code> which is used to abort the iterator.</td>
+</tr>
+<tr>
+<td>options</td>
+<td><code>Object</code></td>
+<td>(optional) options</td>
+</tr>
+<tr>
+<td>options.onAbort</td>
+<td><code>Function</code></td>
+<td>An (async) function called when the iterator is being aborted, before the abort error is thrown. Default <code>null</code></td>
+</tr>
+<tr>
+<td>options.abortMessage</td>
+<td><code>String</code></td>
+<td>The message that the error will have if the iterator is aborted. Default &quot;The operation was aborted&quot;</td>
+</tr>
+<tr>
+<td>options.abortCode</td>
+<td><code>String</code>|<code>Number</code></td>
+<td>The value assigned to the <code>code</code> property of the error that is thrown if the iterator is aborted. Default &quot;ABORT_ERR&quot;</td>
+</tr>
+<tr>
+<td>options.returnOnAbort</td>
+<td><code>Boolean</code></td>
+<td>Instead of throwing the abort error, just return from iterating over the source stream.</td>
+</tr>
+<tr>
+<td>options.onReturnError</td>
+<td><code>Function</code></td>
+<td>When a generator is aborted, we call <code>.return</code> on it - if this function errors the error value will be passed to the <code>.onReturnError</code> callback if passed. Default <code>null</code></td>
+</tr>
+</tbody></table>
+<a id="md:returns" class="tsd-anchor"></a><h4><a href="#md:returns">Returns</a></h4><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol"><code>Iterable</code></a></td>
+<td>An iterator that wraps the passed <code>source</code> parameter that makes it abortable via the passed <code>signal</code> parameter.</td>
+</tr>
+</tbody></table>
+<p>The returned iterator will <code>throw</code> an <code>AbortError</code> when it is aborted that has a <code>type</code> with the value <code>aborted</code> and <code>code</code> property with the value <code>ABORT_ERR</code> by default.</p>
+<a id="md:abortablesinksink-signal-options" class="tsd-anchor"></a><h3><a href="#md:abortablesinksink-signal-options"><code>abortableSink(sink, signal, [options])</code></a></h3><p>The same as <a href="#md:abortablesource-signal-options"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#sink-it"><code>sink</code></a> abortable. Returns a new sink that wraps the passed <code>sink</code> and makes it abortable via the passed <code>signal</code> parameter.</p>
+<a id="md:abortabletransformtransform-signal-options" class="tsd-anchor"></a><h3><a href="#md:abortabletransformtransform-signal-options"><code>abortableTransform(transform, signal, [options])</code></a></h3><p>The same as <a href="#md:abortablesource-signal-options"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#transform-it"><code>transform</code></a> abortable. Returns a new transform that wraps the passed <code>transform</code> and makes it abortable via the passed <code>signal</code> parameter.</p>
+<a id="md:abortableduplexduplex-signal-options" class="tsd-anchor"></a><h3><a href="#md:abortableduplexduplex-signal-options"><code>abortableDuplex(duplex, signal, [options])</code></a></h3><p>The same as <a href="#md:abortablesource-signal-options"><code>abortable.source</code></a> except this makes the passed <a href="https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it"><code>duplex</code></a> abortable. Returns a new duplex that wraps the passed <code>duplex</code> and makes it abortable via the passed <code>signal</code> parameter.</p>
+<p>Note that this will abort <em>both</em> sides of the duplex. Use <code>duplex.sink = abortable.sink(duplex.sink)</code> or <code>duplex.source = abortable.source(duplex.source)</code> to abort just the sink or the source.</p>
+<a id="md:related" class="tsd-anchor"></a><h2><a href="#md:related">Related</a></h2><ul>
+<li><a href="https://www.npmjs.com/package/it-pipe"><code>it-pipe</code></a> Utility to &quot;pipe&quot; async iterables together</li>
+</ul>
+<a id="md:api-docs" class="tsd-anchor"></a><h1><a href="#md:api-docs">API Docs</a></h1><ul>
+<li><a href="https://alanshaw.github.io/abortable-iterator">https://alanshaw.github.io/abortable-iterator</a></li>
+</ul>
+<a id="md:license" class="tsd-anchor"></a><h1><a href="#md:license">License</a></h1><p>Licensed under either of</p>
+<ul>
+<li>Apache 2.0, (<a href="https://github.com/alanshaw/abortable-iterator/LICENSE-APACHE">LICENSE-APACHE</a> / <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>)</li>
+<li>MIT (<a href="https://github.com/alanshaw/abortable-iterator/LICENSE-MIT">LICENSE-MIT</a> / <a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>)</li>
+</ul>
+<a id="md:contribution" class="tsd-anchor"></a><h1><a href="#md:contribution">Contribution</a></h1><p>Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-index-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><h4 class="uppercase">Member Visibility</h4><form><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div><div class="tsd-theme-toggle"><h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#md:abortable-iterator"><span>abortable-<wbr/>iterator</span></a><a href="#md:about"><span>About</span></a><ul><li><a href="#md:example"><span>Example</span></a></li></ul><a href="#md:install"><span>Install</span></a><ul><li><a href="#md:browser-ltscriptgt-tag"><span>Browser &lt;script&gt; tag</span></a></li><li><a href="#md:api"><span>API</span></a></li><li><ul><li><a href="#md:abortablesourcesource-signal-options"><span>abortable<wbr/>Source(source, signal, [options])</span></a></li><li><ul><li><a href="#md:parameters"><span>Parameters</span></a></li><li><a href="#md:returns"><span>Returns</span></a></li></ul></li><li><a href="#md:abortablesinksink-signal-options"><span>abortable<wbr/>Sink(sink, signal, [options])</span></a></li><li><a href="#md:abortabletransformtransform-signal-options"><span>abortable<wbr/>Transform(transform, signal, [options])</span></a></li><li><a href="#md:abortableduplexduplex-signal-options"><span>abortable<wbr/>Duplex(duplex, signal, [options])</span></a></li></ul></li><li><a href="#md:related"><span>Related</span></a></li></ul><a href="#md:api-docs"><span>API <wbr/>Docs</span></a><a href="#md:license"><span>License</span></a><a href="#md:contribution"><span>Contribution</span></a></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="assets/icons.svg#icon-1"></use></svg><span>abortable-iterator</span></a><ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="."><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
